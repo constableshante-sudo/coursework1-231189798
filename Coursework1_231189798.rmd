@@ -1,0 +1,60 @@
+---
+title: "Forecasting the CO2 Time Series with Meta Prophet" 
+subtitle: "Coursework 1" 
+author: "Shante Constable" 
+date: "Spring term 2025" 
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: spacelab 
+    highlight: tango
+---
+ 
+```{r, echo=FALSE}
+# This code will display the QMUL logo at the top right of the page
+# Do not change this code
+htmltools::img(src = knitr::image_uri("images/QMlogo.png"),
+               alt = 'logo',
+               style = 'position:absolute; top:0; right:0; padding:10px; width:20%;')
+```
+
+## Libraries
+
+```{r}
+library(prophet)
+library(zoo)
+```
+
+
+# Introduction 
+
+This project uses the data in Meta Prohpet to study and forecast,in R, the built-in C02 time series.
+
+## Data
+
+```{r}
+co2_dataframe = data.frame(
+ ds = as.Date(as.yearmon(time(co2))),
+ y = as.numeric(co2)
+)
+
+head(co2_dataframe)
+```
+The co2 data is a time series, taken monthly so i converted it into ds and y becasue of Prophet. 
+## Prophet model
+
+```{r}
+co2_prophet_model = prophet(co2_dataframe)
+future_co2_dates = make_future_dataframe(co2_prophet_model, periods = 24, freq = "month")
+co2_forecast = predict(co2_prophet_model, future_co2_dates)
+plot(co2_prophet_model, co2_forecast)
+```
+Here I created a Prophet model, made dates for the future and predicted the next 24 months.
+
+## Comment 
+The forecast continues the overall upward trend in the time series.
+There is also a repeating seasonal pattern acroos the years. 
+So Prophet has obtained both long-term and seasonal patterns. 
+
+
